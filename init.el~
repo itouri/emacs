@@ -2,6 +2,12 @@
 ;; ------------------------------------------------------------------------
 ;; @ load-path
 
+;; melpa
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+
 ;; load-pathの追加関数
 (defun add-to-load-path (&rest paths)
   (let (path)
@@ -17,8 +23,15 @@
 
 ;;auto-install
 (require 'auto-install)
-(auto-install-update-emacswiki-package-name t)
-(auto-install-compatibility-setup)
+;;(auto-install-update-emacswiki-package-name t)
+;;(auto-install-compatibility-setup)
+
+;; company-irony
+(require 'company)
+(global-company-mode) ; 全バッファで有効にする 
+(setq company-idle-delay 0) ; デフォルトは0.5
+(setq company-minimum-prefix-length 2) ; デフォルトは4
+(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
 
 ;;ctags
 (autoload 'gtags-mode "gtags" "" t)
@@ -43,3 +56,43 @@
 
 ;;モードラインにフルパス表示
 (set-default 'mode-line-buffer-identification '(buffer-file-name ("%f") ("%b")))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(inhibit-startup-screen t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;; カーソル行を目立たせる
+(defface hlline-face
+  '((((class color)
+      (background dark))
+     (:background "dark slate gray"))
+    (((class color)
+      (background light))
+     (:background "ForestGreen"))
+    (t
+     ()))
+  "*Face used by hl-line.")
+;;(setq hl-line-face 'hlline-face) ; ハイライト
+(setq hl-line-face 'underline) ; 下線
+(global-hl-line-mode)
+
+;;
+;; auto-complete
+;;
+(require 'auto-complete-config)
+(ac-config-default)
+(add-to-list 'ac-modes 'text-mode)         ;; text-modeでも自動的に有効にする
+(add-to-list 'ac-modes 'fundamental-mode)  ;; fundamental-mode
+(add-to-list 'ac-modes 'org-mode)
+(add-to-list 'ac-modes 'yatex-mode)
+(ac-set-trigger-key "TAB")
+(setq ac-use-menu-map t)       ;; 補完メニュー表示時にC-n/C-pで補完候補選択
+(setq ac-use-fuzzy t)          ;; 曖昧マッチ
